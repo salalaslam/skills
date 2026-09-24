@@ -9,3 +9,4 @@ Personal skills shared across Codex, Claude Code, and other agents.
 | [openrouter-error-handling](openrouter-error-handling/SKILL.md) | Handle API errors, streaming failures, and retries. |
 | [unslop](unslop/SKILL.md) | Remove common AI writing patterns. |
 | [grilling](grilling/SKILL.md) | Stress-test plans and decisions through questions. |
+| [test-audit](test-audit/SKILL.md) | Evaluate test value, remove redundant coverage, and guide test authoring. |
