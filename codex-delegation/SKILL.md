@@ -16,6 +16,19 @@ Give each delegated task a clear outcome, relevant context, and a file scope. In
 
 Keep the configured model and reasoning effort unless the user or task instructions call for an override. Check available models before selecting one.
 
+## Verified CLI models
+
+Verified on 2026-09-30 against the visible models in `~/.codex/models_cache.json`, fetched that day by Codex CLI `0.158.0`. This list reflects this installation's model catalog.
+
+| Model ID | Supported reasoning levels |
+| --- | --- |
+| `gpt-6-astra` | `low`, `medium`, `high`, `xhigh`, `ultra` |
+| `gpt-6-sol` | `low`, `medium`, `high`, `xhigh`, `ultra` |
+| `gpt-6-luna` | `low`, `medium`, `high`, `xhigh` |
+| `gpt-5.6-sol` | `low`, `medium`, `high`, `xhigh`, `ultra` |
+| `gpt-5.6-terra` | `low`, `medium`, `high`, `xhigh`, `ultra` |
+| `gpt-5.6-luna` | `low`, `medium`, `high`, `xhigh` |
+
 ## Run the CLI
 
 Check `codex --version` and the relevant subcommand's `--help` before using unfamiliar flags. Pass multiline prompts through stdin.
