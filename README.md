@@ -6,6 +6,8 @@ Personal skills shared across Codex, Claude Code, and other agents.
 | --- | --- | --- |
 | [anti-sycophancy](anti-sycophancy/SKILL.md) | Give candid, evidence-based feedback. | |
 | [codex-delegation](codex-delegation/SKILL.md) | Delegate tasks and run Codex from scripts. | |
+| [recall](recall/SKILL.md) | Rebuild working context across Claude Code, Codex, and T3 history. | Adapted from Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
+| [blast-radius](blast-radius/SKILL.md) | Trace downstream regression risks and verify safety assumptions. | Adapted from Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [openrouter-error-handling](openrouter-error-handling/SKILL.md) | Handle API errors, streaming failures, and retries. | |
 | [unslop](unslop/SKILL.md) | Remove common AI writing patterns. | Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [bro](bro/SKILL.md) | Restate the last reply in plain language. | Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
