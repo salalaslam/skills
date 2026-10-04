@@ -8,6 +8,8 @@ Personal skills shared across Codex, Claude Code, and other agents.
 | [codex-delegation](codex-delegation/SKILL.md) | Delegate tasks and run Codex from scripts. | |
 | [openrouter-error-handling](openrouter-error-handling/SKILL.md) | Handle API errors, streaming failures, and retries. | |
 | [unslop](unslop/SKILL.md) | Remove common AI writing patterns. | Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
+| [bro](bro/SKILL.md) | Restate the last reply in plain language. | Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
+| [interrogate](interrogate/SKILL.md) | Adversarial review of changes by Claude and Codex reviewers. | Adapted from Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [grilling](grilling/SKILL.md) | Stress-test plans and decisions through questions. | [Matt Pocock](https://github.com/mattpocock/skills) |
 | [test-audit](test-audit/SKILL.md) | Evaluate test value, remove redundant coverage, and guide test authoring. | OpenClaw |
 
