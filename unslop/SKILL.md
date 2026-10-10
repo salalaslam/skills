@@ -1,7 +1,6 @@
 ---
 name: unslop
-description: Cut AI tells from any writing. Must always apply.
-disable-model-invocation: true
+description: Cut AI tells from any writing. Must always apply, and load it before drafting anything someone else will read, such as Teams or Slack messages, PR or issue comments, emails, reports and docs.
 ---
 
 # Unslop
