@@ -14,6 +14,7 @@ Personal skills shared across Codex, Claude Code, and other agents.
 | [interrogate](interrogate/SKILL.md) | Adversarial review of changes by Claude and Codex reviewers. | Adapted from Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [grilling](grilling/SKILL.md) | Stress-test plans and decisions through questions. | [Matt Pocock](https://github.com/mattpocock/skills) |
 | [test-audit](test-audit/SKILL.md) | Evaluate test value, remove redundant coverage, and guide test authoring. | OpenClaw |
+| [proof-video](proof-video/SKILL.md) | Replay a real agent session as a short MP4 to show a fix, or the lack of one. | |
 
 ## Install
 

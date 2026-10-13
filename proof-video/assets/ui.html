@@ -1,0 +1,125 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Claude Code</title>
+<style>
+:root{--bg:#262624;--panel:#1f1e1d;--text:#ebe9e3;--muted:#9c9a92;--accent:#d97757;--user:#393937;--code:#141413;--border:#3a3936;--green:#7fb77e;--red:#e07a6f}
+*{box-sizing:border-box}
+body{margin:0;height:100vh;display:flex;background:var(--bg);color:var(--text);font:17px/1.6 Ubuntu,"DejaVu Sans",sans-serif;overflow:hidden}
+aside{width:290px;background:var(--panel);border-right:1px solid var(--border);padding:18px 14px;display:flex;flex-direction:column;gap:6px}
+aside .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:19px;margin-bottom:16px}
+aside .dot{width:20px;height:20px;border-radius:50%;background:var(--accent)}
+aside .new{border:1px solid var(--border);border-radius:9px;padding:8px 12px;color:var(--muted);font-size:14.5px;margin-bottom:12px}
+aside .lbl{font-size:12.5px;color:var(--muted);margin:8px 10px 4px;text-transform:uppercase;letter-spacing:.04em}
+aside .item{padding:8px 11px;border-radius:9px;color:var(--muted);font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+aside .item.on{background:#30302e;color:var(--text)}
+main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
+header{height:54px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;color:var(--muted);font-size:14.5px;gap:10px}
+header b{color:var(--text);font-weight:600}
+#chapter{margin-left:auto;background:#3a2a22;color:#f0b49a;border:1px solid #6b4433;border-radius:999px;padding:4px 14px;font-size:14px;font-weight:600;opacity:0;transition:opacity .4s}
+#chat{flex:1;overflow-y:auto;padding:28px 0 60px;scrollbar-width:none}
+#chat::-webkit-scrollbar{display:none}
+.wrap{max-width:1060px;margin:0 auto;padding:0 32px}
+.msg{margin:0 0 22px}
+.user{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.user .b{background:var(--user);padding:11px 16px;border-radius:16px;max-width:80%;white-space:pre-wrap}
+.user .att{display:flex;gap:8px}
+.user .att img{height:120px;border-radius:10px;border:1px solid var(--border)}
+.user .att .file{display:flex;align-items:center;gap:8px;background:#30302e;border:1px solid var(--border);border-radius:10px;padding:7px 12px;font-size:14px;color:var(--text)}
+.user .att .file i{font-style:normal;font-size:11px;font-weight:700;padding:2px 5px;border-radius:4px;background:#5a3a2e;color:#f0b49a}
+.user .att .file i.x{background:#2e4a35;color:#9fd8a0}
+.chip{border:1px solid var(--border);border-radius:7px;padding:2px 9px;font:13.5px "DejaVu Sans Mono",monospace;color:var(--muted)}
+.tabs{display:flex;gap:4px;background:#30302e;border-radius:10px;padding:3px;margin-bottom:16px}.tabs span{flex:1;text-align:center;padding:5px 0;border-radius:8px;font-size:14px;color:var(--muted)}.tabs span.on{background:#1f1e1d;color:var(--text);font-weight:600}
+#status{display:flex;gap:16px;margin-top:8px;font-size:13px;color:var(--muted);padding:0 6px}#status b{color:#d4d2c9;font-weight:600}
+.asst .t div{min-height:1em}
+.asst .t .li{padding-left:22px;text-indent:-16px}
+.asst code,.user code{font:15px "DejaVu Sans Mono",monospace;background:#1a1a19;border:1px solid var(--border);border-radius:5px;padding:0 5px}
+.asst b{color:#fff}
+.tool{border:1px solid var(--border);border-radius:11px;margin:12px 0;overflow:hidden;background:var(--code)}
+.tool .h{display:flex;gap:10px;align-items:center;padding:8px 14px;font-size:14px;color:var(--muted);border-bottom:1px solid var(--border)}
+.tool .h .n{color:var(--text);font-weight:600}
+.tool .h .s{margin-left:auto;font-size:13px}
+.tool .h .s.ok{color:var(--green)}
+.tool pre{margin:0;padding:10px 14px;font:14px/1.5 "DejaVu Sans Mono",monospace;white-space:pre-wrap;color:#d4d2c9;max-height:330px;overflow:hidden}
+.tool pre.cmd{color:#e8c39e;border-bottom:1px dashed var(--border)}
+.tool img.shot{display:block;max-width:100%;max-height:380px;margin:10px 14px;border-radius:8px;border:1px solid var(--border)}
+.tool pre .hl{color:#ffd28a;background:#3a3020}
+.tool pre .add{color:var(--green)}.tool pre .del{color:var(--red)}.tool pre .ctx{color:#8f8d86}
+.think{color:var(--muted);font-style:italic;font-size:15.5px}
+.blink{color:var(--accent)}
+.ask{border:1px solid #6b4433;background:#2b2320;border-radius:12px;padding:14px 16px;margin:12px 0}
+.ask .q{font-weight:600;margin-bottom:8px}
+.ask pre{margin:0 0 12px;padding:10px 12px;background:var(--code);border-radius:8px;font:14px/1.5 "DejaVu Sans Mono",monospace;white-space:pre-wrap;color:#e8c39e}
+.ask .btns{display:flex;gap:10px;justify-content:flex-end}
+.ask .btn{padding:7px 16px;border-radius:9px;border:1px solid var(--border);font-size:14.5px}
+.ask .btn.allow{background:var(--accent);border-color:var(--accent);color:#1b1b1a;font-weight:600;transition:transform .1s}
+.ask .btn.allow.press{transform:scale(.94);filter:brightness(.85)}
+.ask.done{opacity:.55}
+footer{padding:14px 0 22px}
+#box{border:1px solid var(--border);background:#30302e;border-radius:18px;min-height:62px;max-height:180px;overflow:hidden;padding:16px 18px;white-space:pre-wrap;color:var(--text)}
+#box.empty{color:var(--muted)}
+#pointer{position:fixed;width:22px;height:22px;z-index:50;pointer-events:none;display:none}
+#card{position:fixed;inset:0;background:#1b1b1a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;text-align:center;transition:opacity .6s}
+#card h1{font-size:46px;margin:0 0 14px;font-weight:600}
+#card p{font-size:21px;color:var(--muted);margin:6px 0;max-width:1100px}
+#card .tag{color:#f0b49a;font-size:17px;margin-bottom:22px;letter-spacing:.06em;text-transform:uppercase}
+</style></head><body>
+<aside><div class="brand"><div class="dot"></div>Claude</div>
+<div class="tabs"><span>Chat</span><span class="on">Code</span></div>
+<div class="new">+ New session</div>
+<div class="lbl" id="project"></div>
+<div id="sessions"></div></aside>
+<main><header><b id="title"></b><span id="cwd"></span><span class="chip" id="branch"></span><span id="chapter"></span></header>
+<div id="chat"><div class="wrap" id="list"></div></div>
+<footer><div class="wrap"><div id="box" class="empty">Reply to Claude…</div><div id="status"><span><b id="model"></b></span><span id="mode"></span><span id="repos"></span></div></div></footer></main>
+<svg id="pointer" viewBox="0 0 24 24"><path d="M3 2l7 19 2.6-7.4L20 11z" fill="#fff" stroke="#000" stroke-width="1.2"/></svg>
+<div id="card" style="opacity:0;display:none"></div>
+<script>
+const $=id=>document.getElementById(id);
+const list=$('list'),box=$('box'),chat=$('chat'),chapter=$('chapter'),card=$('card'),pointer=$('pointer');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let target=0;setInterval(()=>{target=chat.scrollHeight-chat.clientHeight;chat.scrollTop+=Math.ceil((target-chat.scrollTop)*0.3)},40);
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function inline(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>')}
+function md(raw,typing){if(typing){if((raw.match(/\*\*/g)||[]).length%2)raw=raw.replace(/\*\*(?!.*\*\*)/s,'');if((raw.match(/`/g)||[]).length%2)raw=raw.replace(/`(?!.*`)/s,'')}return raw.split('\n').map(l=>{
+  if(/^(- |\d+\. )/.test(l)){const m=l.match(/^(- |\d+\. )(.*)$/);return `<div class="li">${m[1]==='- '?'•&nbsp;':m[1]}${inline(m[2])}</div>`}
+  return `<div>${inline(l)}</div>`}).join('')+(typing?'<span class="blink">▍</span>':'')}
+async function typeTo(fn,text,cps){let s='';const step=Math.max(1,Math.round(cps/25));for(let i=0;i<text.length;i+=step){s=text.slice(0,i+step);fn(s,true);await sleep(1000/cps*step)}fn(text,false)}
+async function showCard(html,ms){card.innerHTML=html;card.style.display='flex';card.style.opacity=1;await sleep(ms);card.style.opacity=0;await sleep(650);card.style.display='none'}
+async function movePointer(toEl){const r=toEl.getBoundingClientRect();const tx=r.left+r.width/2,ty=r.top+r.height/2;
+  pointer.style.display='block';let x=tx-260,y=ty+160;for(let i=0;i<=20;i++){const k=i/20,e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;pointer.style.left=(x+(tx-x)*e)+'px';pointer.style.top=(y+(ty-y)*e)+'px';await sleep(30)}}
+function colorLine(line,kind){
+  if(kind==='diff'){if(line.startsWith('+'))return `<span class="add">${esc(line)}</span>`;if(line.startsWith('-'))return `<span class="del">${esc(line)}</span>`;if(line.startsWith('@@'))return `<span class="ctx">${esc(line)}</span>`;return esc(line)}
+  if(line.startsWith('!!'))return `<span class="hl">${esc(line.slice(2))}</span>`;return esc(line)}
+async function tool(s){
+  const w=el('div','tool'),h=el('div','h');h.append(el('span','n',esc(s.tool)),el('span','',esc(s.desc||'')),el('span','s','running…'));w.append(h);
+  if(s.cmd){const c=el('pre','cmd');w.append(c);list.append(w);await typeTo((t)=>c.textContent=t,s.cmd,s.cmdCps||160);await sleep(s.wait||700)}else list.append(w);
+  const o=el('pre');w.append(o);let html='';
+  for(const line of s.out.split('\n')){html+=colorLine(line,s.kind)+'\n';o.innerHTML=html;o.scrollTop=o.scrollHeight;await sleep((s.lineMs||45)*1.5)}
+  if(s.img){const i=el('img','shot');i.src=s.img;w.append(i);await sleep(400)}
+  h.lastChild.textContent=s.status||'done';h.lastChild.classList.add('ok');await sleep(s.after||1600)}
+// window.META (set by scenario.js) fills the window chrome. Every field is optional.
+function chrome(m){m=m||{};
+  $('title').textContent=m.title||'';$('cwd').textContent=m.cwd?'· '+m.cwd:'';
+  $('branch').textContent=m.branch?'⎇ '+m.branch:'';$('branch').style.display=m.branch?'':'none';
+  $('project').textContent=m.project?'Sessions · '+m.project:'Sessions';
+  const ss=$('sessions');ss.innerHTML='';(m.sessions||[m.title||'Session']).forEach((t,i)=>ss.append(el('div','item'+(i===0?' on':''),esc(t))));
+  $('model').textContent=m.model||'Claude';$('mode').textContent=m.mode||'Ask before edits';$('repos').textContent=m.repos||'';
+  document.title=m.title||'Claude Code'}
+chrome(window.META);
+window.__done=false;
+window.play=async function(steps){chrome(window.META);for(const s of steps){
+ if(s.card){await showCard(s.card,s.ms||3500)}
+ if(s.chapter!==undefined){chapter.style.opacity=0;await sleep(300);chapter.textContent=s.chapter;chapter.style.opacity=s.chapter?1:0;await sleep(300)}
+ if(s.user){box.classList.remove('empty');box.textContent='';
+   if(s.paste){box.textContent=s.user;await sleep(900)}else{await typeTo(t=>box.textContent=t,s.user,s.cps||38)}
+   await sleep(500);const m=el('div','msg user');
+   if(s.images){const a=el('div','att');for(const src of s.images){const i=el('img');i.src=src;a.append(i)}m.append(a)}
+   if(s.files){const a=el('div','att');for(const f of s.files){const c=el('div','file');const ext=(f.split('.').pop()||'file').toUpperCase();c.innerHTML=`<i class="${/^(XLSX|CSV)$/.test(ext)?'x':''}">${esc(ext)}</i>${esc(f)}`;a.append(c)}m.append(a)}
+   const b=el('div','b');b.innerHTML=inline(s.user);m.append(b);list.append(m);box.textContent='Reply to Claude…';box.classList.add('empty');await sleep(700)}
+ if(s.think){const t=el('div','msg think');list.append(t);await typeTo((x,typ)=>t.innerHTML=esc(x)+(typ?'<span class="blink">▍</span>':''),s.think,60);await sleep(s.ms||900)}
+ if(s.tool)await tool(s);
+ if(s.ask){const a=el('div','ask');a.innerHTML=`<div class="q">${esc(s.ask)}</div><pre>${esc(s.askCmd)}</pre><div class="btns"><span class="btn">Deny</span><span class="btn">Always allow</span><span class="btn allow">Allow once</span></div>`;
+   list.append(a);await sleep(1600);const btn=a.querySelector('.allow');await movePointer(btn);await sleep(250);btn.classList.add('press');await sleep(220);btn.classList.remove('press');await sleep(300);pointer.style.display='none';a.classList.add('done');await sleep(400)}
+ if(s.say){const a=el('div','msg asst'),t=el('div','t');a.append(t);list.append(a);await typeTo((x,typ)=>t.innerHTML=md(x,typ),s.say,s.cps||110);await sleep((s.pause||2500)*1.7)}
+ if(s.sleep)await sleep(s.sleep);
+}window.__done=true};
+</script></body></html>
