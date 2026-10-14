@@ -18,10 +18,11 @@ Keep the configured model and reasoning effort unless the user or task instructi
 
 ## Verified CLI models
 
-Verified on 2026-09-30 against the visible models in `~/.codex/models_cache.json`, fetched that day by Codex CLI `0.158.0`. This list reflects this installation's model catalog.
+Verified on 2026-09-30 against the visible models in `~/.codex/models_cache.json`, fetched that day by Codex CLI `0.158.0`. `gpt-6.1-sol` was added on 2026-10-11 from the same file, fetched by Codex CLI `0.162.1`. This list reflects this installation's model catalog.
 
 | Model ID | Supported reasoning levels |
 | --- | --- |
+| `gpt-6.1-sol` | `low`, `medium`, `high`, `xhigh`, `max`, `ultra` |
 | `gpt-6-astra` | `low`, `medium`, `high`, `xhigh`, `ultra` |
 | `gpt-6-sol` | `low`, `medium`, `high`, `xhigh`, `ultra` |
 | `gpt-6-luna` | `low`, `medium`, `high`, `xhigh` |
