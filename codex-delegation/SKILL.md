@@ -14,7 +14,7 @@ Give each delegated task a clear outcome, relevant context, and a file scope. In
 - Use the official Codex SDK for application integration. The packages are `@openai/codex-sdk` for TypeScript and `openai-codex` for Python. Check the [SDK documentation](https://developers.openai.com/codex/sdk/) for the chosen language's API.
 - Use `codex mcp-server` when the caller needs Codex exposed through MCP.
 
-Keep the configured model and reasoning effort unless the user or task instructions call for an override. Check available models before selecting one.
+Default to `gpt-6.1-sol` with `high` reasoning: pass `-m gpt-6.1-sol -c model_reasoning_effort=high`. Use a different model or reasoning level only when the user or task instructions ask for one, and check the current catalog before selecting it.
 
 ## Verified CLI models
 
@@ -38,6 +38,7 @@ For an editing task, set the repository and output paths, then run:
 
 ```sh
 codex exec -C "$repo" --sandbox workspace-write --json \
+  -m gpt-6.1-sol -c model_reasoning_effort=high \
   -o "$final_file" - < "$prompt_file" > "$events_file" 2> "$stderr_file"
 ```
 
@@ -52,7 +53,8 @@ Retain the process or task handle until completion. Use the caller's supported t
 Capture `thread_id` from the JSONL events and resume that session with a follow-up prompt:
 
 ```sh
-codex exec resume --json -o "$final_file" "$thread_id" - \
+codex exec resume --json -m gpt-6.1-sol -c model_reasoning_effort=high \
+  -o "$final_file" "$thread_id" - \
   < "$prompt_file" > "$events_file" 2> "$stderr_file"
 ```
 
