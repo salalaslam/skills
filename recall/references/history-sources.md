@@ -4,14 +4,14 @@ Read only the source sections needed for the requested scope. Paths below are de
 
 ## T3 Code
 
-Local state is usually `~/.t3/userdata/state.sqlite`. Open SQLite read-only. Inspect `sqlite_master` and `PRAGMA table_info(...)` before assuming a schema, since versions can differ.
+Local state is usually `~/.t3/userdata/statev2.sqlite` (T3 0.1.0 and later). Open SQLite read-only. Inspect `sqlite_master` and `PRAGMA table_info(...)` before assuming a schema, since versions can differ. An older `state.sqlite` may sit next to it: that is the V1 database, frozen at the upgrade. `statev2.sqlite` also still contains the unprefixed V1 tables (`projection_threads`, `projection_thread_messages`), imported once and no longer updated. Don't read either for current activity.
 
-The current local schema has:
+The current schema has:
 
-- `projection_projects`: `project_id`, `title`, `workspace_root`.
-- `projection_threads`: `thread_id`, `project_id`, `title`, `worktree_path`, `created_at`, `updated_at`, `deleted_at`.
-- `projection_thread_messages`: `message_id`, `thread_id`, `role`, `text`, `created_at`.
-- `projection_thread_sessions`: `thread_id`, `provider_name`, `provider_session_id`, `provider_thread_id`.
+- `projection_projects`: `project_id`, `title`, `workspace_root` (still current).
+- `orchestration_v2_projection_threads`: `thread_id`, `project_id`, `title`, `created_at`, `updated_at`, `archived_at`, `deleted_at`; `payload_json` holds `branch`, `worktreePath`, `lineage.relationshipToParent` (`subagent` for child threads), `settledAt`, `snoozedUntil` and `pullRequests`.
+- `orchestration_v2_projection_messages`: `message_id`, `thread_id`, `role`, `created_at`; `payload_json` holds `text` and `createdBy`. `createdBy = 'user'` marks the user's own prompts; other `user`-role rows are agent wake-ups and notices.
+- `orchestration_v2_projection_provider_threads` and `orchestration_v2_projection_provider_sessions`: map a thread to its Claude or Codex session.
 
 Use project roots and worktree paths to identify candidates. Match a named thread directly, including archived or deleted history if that is what the user requested. For broad searches, skip deleted threads unless relevant. Search titles first; also search scoped message text if titles do not identify the topic.
 
@@ -21,11 +21,12 @@ This example reads one specified thread, not the full history. Replace the ID wi
 import sqlite3
 from pathlib import Path
 
-db = Path.home() / ".t3/userdata/state.sqlite"
+db = Path.home() / ".t3/userdata/statev2.sqlite"
 thread_id = "the-requested-thread-id"
 with sqlite3.connect(db.as_uri() + "?mode=ro", uri=True) as conn:
     rows = conn.execute(
-        "SELECT role, text, created_at FROM projection_thread_messages "
+        "SELECT role, json_extract(payload_json, '$.text'), created_at "
+        "FROM orchestration_v2_projection_messages "
         "WHERE thread_id = ? ORDER BY created_at, message_id",
         (thread_id,),
     )
@@ -33,7 +34,7 @@ with sqlite3.connect(db.as_uri() + "?mode=ro", uri=True) as conn:
         print(created_at, role, text)
 ```
 
-T3's provider-session mapping helps locate the underlying Claude or Codex transcript. A T3 thread ID is not necessarily its provider session ID. Avoid reading orchestration payloads when the message projection answers the question.
+T3's provider-session mapping helps locate the underlying Claude or Codex transcript. A T3 thread ID is not necessarily its provider session ID. Avoid reading the orchestration event log when the message projection answers the question.
 
 ## Codex
 
