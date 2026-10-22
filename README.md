@@ -15,6 +15,7 @@ Personal skills shared across Codex, Claude Code, and other agents.
 | [grilling](grilling/SKILL.md) | Stress-test plans and decisions through questions. | [Matt Pocock](https://github.com/mattpocock/skills) |
 | [test-audit](test-audit/SKILL.md) | Evaluate test value, remove redundant coverage, and guide test authoring. | OpenClaw |
 | [proof-video](proof-video/SKILL.md) | Replay a real agent session as a short MP4 to show a fix, or the lack of one. | |
+| [t3-threads](t3-threads/SKILL.md) | Create, stop, re-model, resume, and message other T3 Code threads. | |
 
 ## Install
 
