@@ -14,7 +14,7 @@ The deliverable is a synthesized verdict. Do NOT auto-apply changes, and do not 
 
 Identify what to review from context:
 
-- If the user points at specific files, a diff, or a PR, use that. For a PR, review its head as in the `codex-review` skill: fetch it into a worktree, never switch branches in a checkout with uncommitted work.
+- If the user points at specific files, a diff, or a PR, use that. For a PR, review its head in a separate worktree (`git fetch origin pull/<n>/head` then `git worktree add`). Never switch branches in a checkout with uncommitted work.
 - If on a feature branch, run `git fetch origin <base>` and `git diff origin/<base>...HEAD` for the full changeset
 - If the user's message references recent work, gather the relevant files
 
