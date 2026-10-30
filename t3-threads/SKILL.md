@@ -91,6 +91,8 @@ There's no separate resume command. A thread whose last run ended as `interrupte
 - Use one stable `clientRequestId` per message so that retries don't send it twice.
 - The receiving agent sees it as a user message sent by another agent. Write it so it makes sense on its own: say who it's from if that matters, what you need, and what reply you expect.
 - The target thread can't have broader permission modes than the caller.
+- When you need a result back, put your own thread link in the message and ask for the reply with `t3_thread_send` to that link. Don't write "post it here": the receiver reads "here" as its own thread. A send to an idle thread wakes it, but nothing else does: `t3_thread_wait` only blocks, and a PR watch doesn't fire on a plain push. So the reply is your only wake-up.
+- When a message from another thread asks you for a result, send the result to that thread with `t3_thread_send` when you're done, even if the message didn't spell that out.
 - To follow up on a `delegate_task` child, send to its `childThreadId`. For a new review round, call `delegate_task` again instead.
 - Edit or reorder queued messages with `t3_queue_edit`, `t3_queue_reorder` and `t3_queue_promote_to_steer`.
 
