@@ -18,12 +18,13 @@ Default to `gpt-6.1-sol` with `high` reasoning: pass `-m gpt-6.1-sol -c model_re
 
 ## Verified CLI models
 
-Verified on 2026-10-17 against the visible models in `~/.codex/models_cache.json`, fetched that day by Codex CLI `0.163.0`. This list reflects this installation's model catalog and goes out of date; check the current catalog before relying on it.
+Verified on 2026-10-30 against the visible models in `~/.codex/models_cache.json`, fetched that day by Codex CLI `0.165.0`; `gpt-6.1-terra` was also run once with Codex CLI `0.166.0`. This list reflects this installation's model catalog and goes out of date; check the current catalog before relying on it.
 
 | Model ID | Supported reasoning levels |
 | --- | --- |
 | `gpt-6.1-sol` | `low`, `medium`, `high`, `xhigh`, `max`, `ultra` |
 | `gpt-6-astra` | `low`, `medium`, `high`, `xhigh`, `max`, `ultra` |
+| `gpt-6.1-terra` | `low`, `medium`, `high`, `xhigh`, `max`, `ultra` |
 | `gpt-6-sol` | `low`, `medium`, `high`, `xhigh`, `max`, `ultra` |
 | `gpt-6-luna` | `low`, `medium`, `high`, `xhigh`, `max` |
 | `gpt-5.6-sol` | `low`, `medium`, `high`, `xhigh`, `max`, `ultra` |
