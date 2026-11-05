@@ -12,6 +12,7 @@ Personal skills shared across Codex, Claude Code, and other agents.
 | [unslop](unslop/SKILL.md) | Remove common AI writing patterns. | Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [bro](bro/SKILL.md) | Restate the last reply in plain language. | Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
 | [interrogate](interrogate/SKILL.md) | Adversarial review of changes by Claude and Codex reviewers. | Adapted from Lauren Tan, [pstack](https://github.com/cursor/plugins/tree/main/pstack) |
+| [hill-climb](hill-climb/SKILL.md) | Improve work in scored rounds until it hits a target, stalls or runs out of budget; ask before going past the target. | |
 | [sol-loop](sol-loop/SKILL.md) | Review your change with Codex gpt-6.1-sol in budgeted rounds, fixing only what's real and keeping the change small. | |
 | [grilling](grilling/SKILL.md) | Stress-test plans and decisions through questions. | [Matt Pocock](https://github.com/mattpocock/skills) |
 | [test-audit](test-audit/SKILL.md) | Evaluate test value, remove redundant coverage, and guide test authoring. | OpenClaw |
