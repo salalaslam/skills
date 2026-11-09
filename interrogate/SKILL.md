@@ -38,7 +38,7 @@ Use the reviewers or models the user names. Otherwise use these defaults:
 | Reviewer | Default model | How to run |
 |----------|---------------|------------|
 | Reviewer A | Claude `opus` | Claude Code: a `general-purpose` subagent with `model: opus`, told it is read-only. Elsewhere: `claude -p` (below). |
-| Reviewer B | Codex `gpt-6-astra`, high reasoning | `codex exec` (below) |
+| Reviewer B | Codex `gpt-6.1-sol`, high reasoning | `codex exec` (below) |
 | Reviewer C | Codex `gpt-5.6-sol`, high reasoning | `codex exec` (below) |
 
 Read `references/reviewer-prompt.md` and fill in the template with:
@@ -52,7 +52,7 @@ The same filled template goes to all reviewers, so every model applies the code-
 Codex reviewer, run from the review checkout:
 
 ```sh
-codex exec -s read-only -m gpt-6-astra -c 'model_reasoning_effort="high"' \
+codex exec -s read-only -m gpt-6.1-sol -c 'model_reasoning_effort="high"' \
   -o /tmp/interrogate-<slug>-B.md - < /tmp/interrogate-<slug>.prompt \
   > /tmp/interrogate-<slug>-B.log 2>&1
 ```
@@ -66,7 +66,7 @@ claude -p --model opus --allowedTools Read Grep Glob 'Bash(git diff:*)' 'Bash(gi
 
 Check `codex --version` and `codex exec --help` before relying on these flags. Never use the dangerous bypass flags. After each run, confirm from its log or transcript that the reviewer actually read the diff or files. A "no findings" result only counts if it saw the code.
 
-If a model is rejected or unavailable, run that reviewer on the next tier of the same family (`gpt-6-astra` → `gpt-5.6-sol` → `gpt-5.6-terra`, `opus` → `sonnet`) and say so. If a reviewer fails, show the tail of its log and continue with the rest. Do not block the review on one reviewer.
+If a model is rejected or unavailable, run that reviewer on the next tier of the same family (`gpt-6.1-sol` → `gpt-5.6-sol` → `gpt-5.6-terra`, `opus` → `sonnet`) and say so. If a reviewer fails, show the tail of its log and continue with the rest. Do not block the review on one reviewer.
 
 ## Step 4, Synthesize
 

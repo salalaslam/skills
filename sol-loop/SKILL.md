@@ -49,7 +49,7 @@ How to run it:
 
 A clean result only counts if the reviewer actually read the code. Check its log or transcript for the diff and file reads. A clean result after a few seconds with no reads doesn't count as a round.
 
-If the model is at capacity, wait two minutes and retry the same model. If it keeps failing, use `gpt-6-astra` high and say so in the report.
+If the model is at capacity, wait two minutes and retry the same model. If it keeps failing, use `gpt-5.6-sol` high and say so in the report.
 
 ## 4. Handle findings
 
