@@ -65,7 +65,7 @@ Stopping someone else's work is disruptive. Stop only threads the user named or 
 
    ```json
    {"instanceId":"claudeAgent","model":"claude-sonnet-5-5","options":[{"id":"effort","value":"high"}]}
-   {"instanceId":"codex","model":"gpt-6.1-sol","options":[{"id":"reasoningEffort","value":"high"}]}
+   {"instanceId":"codex","model":"gpt-6.2-sol","options":[{"id":"reasoningEffort","value":"high"}]}
    ```
 
 4. Call `t3_thread_configure` with only `threadId` again to confirm the change.

@@ -5,7 +5,7 @@ description: Use when the user says "sol loop", or when another skill (such as f
 
 # Sol loop
 
-You own the change. Codex `gpt-6.1-sol` reviews it, you fix what's real and push back on what isn't, and you repeat until a round comes back clean or the budget runs out. Use it before opening a PR, or on an open PR before asking for human review.
+You own the change. Two reviewers from different model families, Codex `gpt-6.2-sol` and Claude Opus, review and score it; you fix what's real and push back on what isn't, and you repeat until a round passes or the budget runs out. A round passes when **both reviewers score the change 9/10 or more and neither reports a `[blocking]` finding**. It doesn't have to come back with no findings at all. Use it before opening a PR, or on an open PR before asking for human review.
 
 The goal is the smallest change that does what was asked, made correct. Reviews make the change right, not bigger.
 
@@ -24,7 +24,7 @@ Make a state dir outside the repo and outside `/tmp` (a reboot wipes `/tmp`): `S
 
 ## 3. One round
 
-Run one reviewer at a time. The reviewer is read-only and must not start its own subagents or reviewers.
+Each round, both reviewers get the same prompt and review the same head, at the same time. They are read-only and must not start their own subagents or reviewers. They are never told the bar of 9: knowing it pulls scores toward it.
 
 The prompt (`$S/roundK.prompt.md`) says:
 
@@ -33,23 +33,35 @@ The prompt (`$S/roundK.prompt.md`) says:
 3. The contents of `context.md`.
 4. Report only things that go wrong in a realistic scenario: wrong results, crashes, data loss, security or privacy problems, broken migrations or deploys, races, or a mismatch with what the change is meant to do. Skip style, naming, comments, docs, refactors, missing tests and hypothetical hardening.
 5. Round 1 reviews the whole change. Later rounds review only the commits since the last round plus findings still open. Here is the ledger; don't raise anything under `Accepted` again.
-6. Output a numbered list, each with `file:line`, the concrete failure and a suggested fix. If there's nothing worth fixing, output exactly `No further issues.`
+6. Tag each finding `[blocking]` (in a realistic scenario: data loss, a security, auth or privacy problem, wrong money or legal output, or a broken migration or deploy) or `[minor]` (anything else worth fixing).
+7. Score how ready the change is to merge as it stands, 1 to 10: 10 merge as is; 9 ready, anything left is minor and acceptable; 7–8 something should be fixed first; 5–6 a real bug on the main path or part of the ask missing; 1–4 wrong approach or serious harm likely. Judge it against what the change is meant to do, not an ideal design; a bigger change isn't a better one. Settled `Accepted` items don't lower the score.
+8. Output only a numbered list, each line `[blocking|minor] file:line: the concrete failure. Fix: ...` (or `No findings.`), then a last line `SCORE: N/10` with one sentence on why.
 
 How to run it:
 
-- **In T3 Code:** `delegate_task` with `target: {providerInstanceId: "codex", model: "gpt-6.1-sol", options: [{id: "reasoningEffort", value: "high"}]}`. Put the whole prompt in the task, since the child knows nothing else. Wait for it with `task_status`.
+- **In T3 Code:** two `delegate_task` calls started together, one with `target: {providerInstanceId: "codex", model: "gpt-6.2-sol", options: [{id: "reasoningEffort", value: "high"}]}` and one on Claude `opus`. Put the whole prompt in each task, since the children know nothing else. Wait for both with `task_status`.
 - **Elsewhere:** `codex exec` from the review checkout, following the `codex-delegation` skill:
 
   ```sh
-  codex exec -s read-only -m gpt-6.1-sol -c model_reasoning_effort=high \
+  codex exec -s read-only -m gpt-6.2-sol -c model_reasoning_effort=high \
     -o "$S/roundK.md" - < "$S/roundK.prompt.md" > "$S/roundK.log" 2>&1
   ```
 
-  If the read-only sandbox can't start on this machine, run without it. In that case, compare `git status --porcelain` before and after, and revert anything the reviewer changed.
+  and, at the same time, Opus read-only:
+
+  ```sh
+  claude -p --model opus --permission-mode default --strict-mcp-config --no-session-persistence \
+    --tools Read Grep Glob Bash --allowedTools Read Grep Glob 'Bash(git diff:*)' 'Bash(git show:*)' 'Bash(git log:*)' \
+    < "$S/roundK.prompt.md" > "$S/roundK.opus.md" 2> "$S/roundK.opus.log"
+  ```
+
+  If the read-only sandbox can't start on this machine, run Codex without it. In that case, compare `git status --porcelain` before and after, and revert anything a reviewer changed.
+
+Write both scores into the ledger after each round (`Round K: Sol 8, Opus 9, 1 blocking`). In byomeorg/hr, use the `fix-byome-issue` scripts instead, which run both reviewers and enforce the bar and the cap.
 
 A clean result only counts if the reviewer actually read the code. Check its log or transcript for the diff and file reads. A clean result after a few seconds with no reads doesn't count as a round.
 
-If the model is at capacity, wait two minutes and retry the same model. If it keeps failing, use `gpt-5.6-sol` high and say so in the report.
+If a model is at capacity, wait two minutes and retry the same model. If Sol keeps failing, use `gpt-6.1-sol` high, then `gpt-5.6-sol`; if Opus keeps failing, use `sonnet`. Say so in the report. A round with only one reviewer's score doesn't count as passing.
 
 ## 4. Handle findings
 
@@ -66,7 +78,8 @@ Then run the repo's own checks (typecheck, lint, tests), commit, and start the n
 
 - **3 rounds** by default.
 - **Up to 5** only when the open findings involve security, permissions, data loss, money, migrations or deploys.
-- **Stop early** when a round returns `No further issues.`, or returns only things you'd decline.
+- **Stop** when a round passes. Fix cheap, clearly right `[minor]` findings from that round, then stop; don't keep looping to push a passing score higher.
+- **Stop early** when a round returns only things you'd decline (put them under `Accepted`; a round where you decline everything still needs both scores at 9 to count as passed).
 - If new rounds keep finding new edge cases in the same code, the design is usually the problem. Step back and look for a simpler approach instead of adding another patch.
 - When the budget runs out, stop. Leave what's still open as open; don't hide it.
 
@@ -75,7 +88,7 @@ Then run the repo's own checks (typecheck, lint, tests), commit, and start the n
 Tell the user:
 
 - **Rounds:** how many rounds ran, which model, and the final head SHA.
-- **Verdict:** `clean` (the last round said `No further issues.` on the final head), or `open` followed by the list of open findings. Report the verdict as it is. Don't call a round clean if it said otherwise.
+- **Verdict:** `passed` (the last round on the final head had both scores at 9 or more and no `[blocking]` findings), with each reviewer's score per round; or `open`, followed by the open findings and the last scores. Report the verdict as it is. Don't call a round passed if it said otherwise.
 - **Real problems caught:** one line each.
 - **Declined findings:** what you declined or deferred, and why.
 

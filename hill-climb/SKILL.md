@@ -13,7 +13,7 @@ Before any change, write down:
 
 - **What's being improved**, and what must not get worse ("send less data, with no visible UI change").
 - **How it's scored.** Prefer a number a program produces: tests passing, an eval, a benchmark, bundle size, token count, response time. Programs give the same answer every time.
-- **If no program can score it** (design, writing, UX), use judge models: Codex `gpt-6.1-sol` and Claude Opus. Give each the same short rubric, 4–6 categories, each out of 10. Show them the work directly: screenshots for UI, the text for writing.
+- **If no program can score it** (design, writing, UX), use judge models: Codex `gpt-6.2-sol` and Claude Opus. Give each the same short rubric, 4–6 categories, each out of 10. Show them the work directly: screenshots for UI, the text for writing.
 - **Something to compare against.** Judges score honestly only when they see the work next to something else: the version before, competing products, or the best example available. Always include at least one.
 - **The target.** Default 9/10 for judged work. For program scores, use the user's number.
 - **The budget.** Default 8 rounds or 4 hours, whichever comes first.
